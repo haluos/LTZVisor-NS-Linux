@@ -32,7 +32,19 @@
  * Because of scu_get_core_count() must be in __init section and can't
  * be called from zynq_cpun_start() because it is not in __init section.
  */
+extern void secure_write(uint32_t, void *);
 static int ncores;
+// #undef writel
+// #define writel(val, addr) \
+// 	secure_write(val, addr)
+
+extern void secure_cp15_write (void);
+
+void test_cpu1 (void)
+{
+	pr_info("CPU1 awake\n");
+	while(1);
+}
 
 int zynq_cpun_start(u32 address, int cpu)
 {
@@ -47,7 +59,7 @@ int zynq_cpun_start(u32 address, int cpu)
 		u32 trampoline_size = &zynq_secondary_trampoline_jump -
 						&zynq_secondary_trampoline;
 
-		zynq_slcr_cpu_stop(cpu);
+		// zynq_slcr_cpu_stop(cpu);
 		if (address) {
 			if (__pa(PAGE_OFFSET)) {
 				zero = ioremap(0, trampoline_code_size);
@@ -68,15 +80,26 @@ int zynq_cpun_start(u32 address, int cpu)
 			memcpy((__force void *)zero, &zynq_secondary_trampoline,
 							trampoline_size);
 			writel(address, zero + trampoline_size);
+			secure_write(__virt_to_idmap(idmap_to_phys(secondary_startup)), (void *)0xfffffff0);
 
 			flush_cache_all();
 			outer_flush_range(0, trampoline_code_size);
 			smp_wmb();
+			asm volatile("sev\n");
 
 			if (__pa(PAGE_OFFSET))
 				iounmap(zero);
 		}
-		zynq_slcr_cpu_start(cpu);
+		// zynq_slcr_cpu_start(cpu);
+		// asm volatile(	".arch_extension sec\n"
+		// 							"mov r8, r0\n"
+		// 							"mov r1, %0\n"
+		// 							"ldr r0, =0x0ffffffb\n"
+		// 							"smc #0\n"
+		// 							"mov r0, r8"
+		// 							:: "r"(address));
+		// smp_wmb();
+		// pr_info("Test address 0x%x\n", __pa(&test_cpu1));
 
 		return 0;
 	}
@@ -92,7 +115,7 @@ static int zynq_boot_secondary(unsigned int cpu, struct task_struct *idle)
 	if (!zynq_efuse_cpu_state(cpu))
 		return -1;
 
-	return zynq_cpun_start(__pa_symbol(secondary_startup), cpu);
+	return zynq_cpun_start(__pa_symbol(&secondary_startup), cpu);
 }
 
 /*
@@ -123,13 +146,16 @@ static void __init zynq_smp_prepare_cpus(unsigned int max_cpus)
  */
 static void zynq_secondary_init(unsigned int cpu)
 {
-	zynq_core_pm_init();
+	// zynq_core_pm_init();
+	pr_info("CPU1 Init\n");
+	secure_cp15_write();
 	zynq_prefetch_init();
 }
 
 #ifdef CONFIG_HOTPLUG_CPU
 static int zynq_cpu_kill(unsigned cpu)
 {
+	pr_info("Kill CPU\n");
 	unsigned long timeout = jiffies + msecs_to_jiffies(50);
 
 	while (zynq_slcr_cpu_state_read(cpu))
@@ -149,6 +175,7 @@ static int zynq_cpu_kill(unsigned cpu)
  */
 static void zynq_cpu_die(unsigned int cpu)
 {
+	pr_info("Die CPU\n");
 	zynq_slcr_cpu_state_write(cpu, true);
 
 	/*

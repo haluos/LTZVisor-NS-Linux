@@ -1003,7 +1003,6 @@ static int run_init_process(const char *init_filename)
 {
 	argv_init[0] = init_filename;
 	pr_info("Run %s as init process\n", init_filename);
-	pr_info("&argv_init = %d, &envp_init = %d", &argv_init, &envp_init);
 	return do_execve(getname_kernel(init_filename),
 		(const char __user *const __user *)argv_init,
 		(const char __user *const __user *)envp_init);
@@ -1081,7 +1080,6 @@ static int __ref kernel_init(void *unused)
 	rcu_end_inkernel_boot();
 
 	if (ramdisk_execute_command) {
-		pr_info("Ramdisk execute command: %s\n", ramdisk_execute_command);
 		ret = run_init_process(ramdisk_execute_command);
 		if (!ret)
 			return 0;
@@ -1095,7 +1093,6 @@ static int __ref kernel_init(void *unused)
 	 * The Bourne shell can be used instead of init if we are
 	 * trying to recover a really broken machine.
 	 */
-	pr_info("execute command\n");
 	if (execute_command) {
 		ret = run_init_process(execute_command);
 		if (!ret)

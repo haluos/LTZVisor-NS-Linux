@@ -735,21 +735,27 @@ __pv_offset:
 .arch_extension sec
 
 ENTRY(secure_read)
+	@ mov r5, r0
 	mov	r1, r0
 	ldr	r0, =-30  /* smc call id - read */
 	smc	#0
+	@ mov r0, r5
 	bx	lr
 ENDPROC(secure_read)
 
 ENTRY(secure_write)
+	mov r3, r0
 	mov	r2, r0
 	ldr	r0, =-31 /* smc call id - write */
 	smc	#0
+	mov r0, r3
 	bx	lr
 ENDPROC(secure_write)
 
 ENTRY(secure_cp15_write)
+	@ mov r5, r0
 	ldr	r0, =-32 /* smc call id - write */
 	smc	#0
+	@ mov r0, r5
 	bx	lr
 ENDPROC(secure_cp15_write)

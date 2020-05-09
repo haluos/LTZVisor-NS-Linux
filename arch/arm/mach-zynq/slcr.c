@@ -62,7 +62,9 @@ extern void secure_write(uint32_t, void *);
  */
 static int zynq_slcr_write(u32 val, u32 offset)
 {
-	return regmap_write(zynq_slcr_regmap, offset, val);
+	secure_write(val, zynq_slcr_base + offset);
+	return 0;
+	// return regmap_write(zynq_slcr_regmap, offset, val);
 }
 
 /**
@@ -75,7 +77,8 @@ static int zynq_slcr_write(u32 val, u32 offset)
  */
 static int zynq_slcr_read(u32 *val, u32 offset)
 {
-	return regmap_read(zynq_slcr_regmap, offset, val);
+	return secure_read(zynq_slcr_base + offset);
+	// return regmap_read(zynq_slcr_regmap, offset, val);
 }
 
 /**
@@ -206,6 +209,7 @@ void zynq_slcr_cpu_stop(int cpu)
 
 	zynq_slcr_read(&reg, SLCR_A9_CPU_RST_CTRL_OFFSET);
 	reg |= (SLCR_A9_CPU_CLKSTOP | SLCR_A9_CPU_RST) << cpu;
+	// reg |= (SLCR_A9_CPU_CLKSTOP) << cpu;
 	zynq_slcr_write(reg, SLCR_A9_CPU_RST_CTRL_OFFSET);
 }
 

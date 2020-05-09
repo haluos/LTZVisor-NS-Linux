@@ -573,9 +573,15 @@ void __init smp_init(void)
 	/* FIXME: This should be done in userspace --RR */
 	for_each_present_cpu(cpu) {
 		if (num_online_cpus() >= setup_max_cpus)
+		{
+			pr_info("Num online CPUs greater than max CPUs\n");
 			break;
+		}
 		if (!cpu_online(cpu))
+		{
+			pr_info("CPU not online\n");
 			cpu_up(cpu);
+		}
 	}
 
 	num_nodes = num_online_nodes();

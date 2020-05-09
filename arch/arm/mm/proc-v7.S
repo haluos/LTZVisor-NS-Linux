@@ -174,36 +174,36 @@ ENTRY(cpu_v7_do_resume)
 	mcr	p15, 0, r7, c2, c0, 1	@ TTB 1
 #endif
 	mcr	p15, 0, r11, c2, c0, 2	@ TTB control register
-	/************************ SMC TTBCR write ****************************/
-	.arch_extension sec
-	mov r4, r0
-	mov r5, r1
-	mov r0, #0x0000ffff
-	movt r0, #0x3333
-	mov r1, r11
-	smc #0
-	isb
-	dsb
-	mov r0, r4
-	mov r1, r5
-	/*******************************************************************/
+	@ /************************ SMC TTBCR write ****************************/
+	@ .arch_extension sec
+	@ mov r4, r0
+	@ mov r5, r1
+	@ mov r0, #0x0000ffff
+	@ movt r0, #0x3333
+	@ mov r1, r11
+	@ smc #0
+	@ isb
+	@ dsb
+	@ mov r0, r4
+	@ mov r1, r5
+	@ /*******************************************************************/
 	ldr	r4, =PRRR		@ PRRR
 	ldr	r5, =NMRR		@ NMRR
 	mcr	p15, 0, r4, c10, c2, 0	@ write PRRR
 	mcr	p15, 0, r5, c10, c2, 1	@ write NMRR
 #endif	/* CONFIG_MMU */
 	mrc	p15, 0, r4, c1, c0, 1	@ Read Auxiliary control register
-	/************************ SMC AUX write ****************************/
-	mov r0, #0x0101
-	movt r0, #0x0101
-	mov r5, r1
-	mov r1, r9
-	teq r4, r1
-	smcne #0
-	isb
-	dsb
-	mov r1, r5
-	/*******************************************************************/
+	@ /************************ SMC AUX write ****************************/
+	@ mov r0, #0x0101
+	@ movt r0, #0x0101
+	@ mov r5, r1
+	@ mov r1, r9
+	@ teq r4, r1
+	@ smcne #0
+	@ isb
+	@ dsb
+	@ mov r1, r5
+	@ /*******************************************************************/
 	teq	r4, r9			@ Is it already set?
 	mcrne	p15, 0, r9, c1, c0, 1	@ No, so write it
 	mcr	p15, 0, r10, c1, c0, 2	@ Co-processor access control

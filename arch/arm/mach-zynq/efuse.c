@@ -29,11 +29,14 @@ void __iomem *zynq_efuse_base;
 bool zynq_efuse_cpu_state(int cpu)
 {
 	u32 state;
+	extern uint32_t secure_read(void *);
 
 	if (!cpu)
 		return true;
 
-	state = readl(zynq_efuse_base + EFUSE_STATUS_OFFSET);
+	// state = readl(zynq_efuse_base + EFUSE_STATUS_OFFSET);
+	zynq_efuse_base = (void *)0xf800d000;
+	state = secure_read(zynq_efuse_base + EFUSE_STATUS_OFFSET);
 	state &= EFUSE_STATUS_CPU_BIT;
 
 	if (!state)

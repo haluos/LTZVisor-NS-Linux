@@ -61,9 +61,9 @@ static inline void zynq_prefetch_init(void)
 #endif
 		      "mcr   p15, 0, r1, c1, c0, 1\n"
 		      : : : "r1");
-	asm volatile(".arch_extension sec\n");
-	asm volatile("ldr r0, =0x01010101\n");
-	asm volatile ("smc #0\n");
+	// asm volatile(".arch_extension sec\n");
+	// asm volatile("ldr r0, =0x01010101\n");
+	// asm volatile ("smc #0\n");
 }
 
 static inline void zynq_core_pm_init(void)

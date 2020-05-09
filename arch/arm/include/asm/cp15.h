@@ -93,11 +93,11 @@ static inline unsigned int get_auxcr(void)
 
 static inline void set_auxcr(unsigned int val)
 {
-	unsigned int register value asm("r1") = val;
+	// unsigned int register value asm("r1") = val;
 	// uint32_t register request asm("r0") = 0x01010101;
-	asm volatile(".arch_extension sec\n");
-	asm volatile("ldr r0, =0x01010101\n");
-	asm volatile("smc #0\n");
+	// asm volatile(".arch_extension sec\n");
+	// asm volatile("ldr r0, =0x01010101\n");
+	// asm volatile("smc #0\n");
 	asm volatile("mcr p15, 0, %0, c1, c0, 1	@ set AUXCR"
 	  : : "r" (val));
 	isb();

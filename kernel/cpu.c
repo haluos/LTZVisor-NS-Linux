@@ -151,6 +151,7 @@ static int cpuhp_invoke_callback(unsigned int cpu, enum cpuhp_state state,
 
 	if (st->fail == state) {
 		st->fail = CPUHP_INVALID;
+		pr_info("State fail\n");
 
 		if (!(bringup ? step->startup.single : step->teardown.single))
 			return 0;
@@ -1142,6 +1143,7 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
 	}
 
 	err = _cpu_up(cpu, 0, target);
+	pr_info("CPU_up with exit status: 0x%x\n", err);
 out:
 	cpu_maps_update_done();
 	return err;

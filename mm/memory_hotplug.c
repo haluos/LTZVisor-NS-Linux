@@ -1083,8 +1083,11 @@ int try_online_node(int nid)
 	int ret;
 
 	mem_hotplug_begin();
+	pr_info("Mem hotplug begin done\n");
 	ret =  __try_online_node(nid, 0, true);
+	pr_info("Tried online node, ret = %d\n", ret);
 	mem_hotplug_done();
+	pr_info("Mem hotplug done\n");
 	return ret;
 }
 

@@ -61,6 +61,11 @@
  */
 struct secondary_data secondary_data;
 
+// #ifdef smp_processor_id
+// #undef smp_processor_id
+// #define smp_processor_id()		1
+// #endif
+
 /*
  * control for which core is the next to come out of the secondary
  * boot "holding pen"
@@ -107,7 +112,10 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
 	int ret;
 
 	if (!smp_ops.smp_boot_secondary)
+	{
+		pr_info("SMP boot secondary: no boot function\n");
 		return -ENOSYS;
+	}
 
 	/*
 	 * We need to tell the secondary core where to find
@@ -210,6 +218,7 @@ int platform_can_hotplug_cpu(unsigned int cpu)
 int __cpu_disable(void)
 {
 	unsigned int cpu = smp_processor_id();
+	// unsigned int cpu = 1;
 	int ret;
 
 	ret = platform_cpu_disable(cpu);
@@ -531,6 +540,11 @@ static struct ipi ipi_types[NR_IPI] = {
 	S(IPI_COMPLETION, ipi_complete),
 };
 
+// #ifdef smp_processor_id
+// #undef smp_processor_id
+// #define smp_processor_id()		1
+// #endif
+
 static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
 {
 	trace_ipi_raise_rcuidle(target, ipi_desc_strings[ipinr]);
@@ -601,6 +615,7 @@ static DEFINE_RAW_SPINLOCK(stop_lock);
 static void ipi_cpu_stop(void)
 {
 	unsigned int cpu = smp_processor_id();
+	// unsigned int cpu = 1;
 
 	if (system_state <= SYSTEM_RUNNING) {
 		raw_spin_lock(&stop_lock);
@@ -644,6 +659,7 @@ asmlinkage void __exception_irq_entry do_IPI(int ipinr, struct pt_regs *regs)
 void handle_IPI(int ipinr, struct pt_regs *regs)
 {
 	unsigned int cpu = smp_processor_id();
+	// unsigned int cpu = 1;
 	struct pt_regs *old_regs = set_irq_regs(regs);
 
 	if (ipi_types[ipinr].handler) {
@@ -664,6 +680,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 int set_ipi_handler(int ipinr, void *handler, char *desc)
 {
 	unsigned int cpu = smp_processor_id();
+	// unsigned int cpu = 1;
 
 	if (ipi_types[ipinr].handler) {
 		pr_crit("CPU%u: IPI handler 0x%x already registered to %pf\n",
