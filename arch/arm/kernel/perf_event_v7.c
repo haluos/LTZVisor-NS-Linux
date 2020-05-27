@@ -1096,9 +1096,9 @@ static void armv7pmu_reset(void *info)
 	u32 idx, nb_cnt = cpu_pmu->num_events, val;
 
 	if (cpu_pmu->secure_access) {
-		asm volatile("mrc p15, 0, %0, c1, c1, 1" : "=r" (val));
-		val |= ARMV7_SDER_SUNIDEN;
-		asm volatile("mcr p15, 0, %0, c1, c1, 1" : : "r" (val));
+		// asm volatile("mrc p15, 0, %0, c1, c1, 1" : "=r" (val));
+		// val |= ARMV7_SDER_SUNIDEN;
+		// asm volatile("mcr p15, 0, %0, c1, c1, 1" : : "r" (val));
 	}
 
 	/* The counter and interrupt enable registers are unknown at reset. */

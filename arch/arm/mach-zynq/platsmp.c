@@ -91,15 +91,6 @@ int zynq_cpun_start(u32 address, int cpu)
 				iounmap(zero);
 		}
 		// zynq_slcr_cpu_start(cpu);
-		// asm volatile(	".arch_extension sec\n"
-		// 							"mov r8, r0\n"
-		// 							"mov r1, %0\n"
-		// 							"ldr r0, =0x0ffffffb\n"
-		// 							"smc #0\n"
-		// 							"mov r0, r8"
-		// 							:: "r"(address));
-		// smp_wmb();
-		// pr_info("Test address 0x%x\n", __pa(&test_cpu1));
 
 		return 0;
 	}
@@ -147,7 +138,9 @@ static void __init zynq_smp_prepare_cpus(unsigned int max_cpus)
 static void zynq_secondary_init(unsigned int cpu)
 {
 	// zynq_core_pm_init();
-	pr_info("CPU1 Init\n");
+	// pr_info("CPU1 Init\n");
+	// asm volatile(".arch_extension sec\n");
+	// asm volatile("smc #0");
 	secure_cp15_write();
 	zynq_prefetch_init();
 }

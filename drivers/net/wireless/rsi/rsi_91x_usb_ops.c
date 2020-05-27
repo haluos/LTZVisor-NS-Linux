@@ -58,4 +58,3 @@ out:
 	skb_queue_purge(&dev->rx_q);
 	complete_and_exit(&dev->rx_thread.completion, 0);
 }
-

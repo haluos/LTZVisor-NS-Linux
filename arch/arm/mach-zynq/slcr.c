@@ -77,7 +77,8 @@ static int zynq_slcr_write(u32 val, u32 offset)
  */
 static int zynq_slcr_read(u32 *val, u32 offset)
 {
-	return secure_read(zynq_slcr_base + offset);
+	*val = secure_read(zynq_slcr_base + offset);
+	return 0;
 	// return regmap_read(zynq_slcr_regmap, offset, val);
 }
 

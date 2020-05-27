@@ -68,6 +68,7 @@ void (*arm_pm_idle)(void);
 
 void arch_cpu_idle(void)
 {
+  local_irq_enable();
 	if (arm_pm_idle)
 		arm_pm_idle();
 	else
@@ -77,7 +78,7 @@ void arch_cpu_idle(void)
 
 void arch_cpu_idle_prepare(void)
 {
-	local_fiq_enable();
+	// local_fiq_enable();
 }
 
 void arch_cpu_idle_enter(void)

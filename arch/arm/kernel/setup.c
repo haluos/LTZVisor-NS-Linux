@@ -669,6 +669,11 @@ static void __init smp_build_mpidr_hash(void)
 }
 #endif
 
+void ltzvisor_idle_handler (uint32_t reg)
+{
+	pr_info("WFI %d\n", reg);
+}
+
 static void __init setup_processor(void)
 {
 	struct proc_info_list *list;

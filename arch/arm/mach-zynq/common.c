@@ -77,6 +77,7 @@ static int __init zynq_get_revision(void)
 	struct device_node *np;
 	void __iomem *zynq_devcfg_base;
 	u32 revision;
+	extern uint32_t secure_read(void *);
 
 	np = of_find_compatible_node(NULL, NULL, "xlnx,zynq-devcfg-1.0");
 	if (!np) {
@@ -90,7 +91,10 @@ static int __init zynq_get_revision(void)
 		return -1;
 	}
 
-	revision = readl(zynq_devcfg_base + ZYNQ_DEVCFG_MCTRL);
+	void *devcfg_base = (void *) 0xf8007000;
+
+	// revision = readl(zynq_devcfg_base + ZYNQ_DEVCFG_MCTRL);
+	revision = secure_read(devcfg_base + ZYNQ_DEVCFG_MCTRL);
 	revision >>= ZYNQ_DEVCFG_PS_VERSION_SHIFT;
 	revision &= ZYNQ_DEVCFG_PS_VERSION_MASK;
 

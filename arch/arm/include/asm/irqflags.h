@@ -53,8 +53,10 @@ static inline void arch_local_irq_disable(void)
 		: "memory", "cc");
 }
 
-#define local_fiq_enable()  __asm__("cpsie f	@ __stf" : : : "memory", "cc")
-#define local_fiq_disable() __asm__("cpsid f	@ __clf" : : : "memory", "cc")
+#define local_fiq_enable()
+ // __asm__("cpsie f	@ __stf" : : : "memory", "cc")
+#define local_fiq_disable()
+// __asm__("cpsid f	@ __clf" : : : "memory", "cc")
 
 #ifndef CONFIG_CPU_V7M
 #define local_abt_enable()  __asm__("cpsie a	@ __sta" : : : "memory", "cc")
@@ -118,32 +120,34 @@ static inline void arch_local_irq_disable(void)
 /*
  * Enable FIQs
  */
-#define local_fiq_enable()					\
-	({							\
-		unsigned long temp;				\
-	__asm__ __volatile__(					\
-	"mrs	%0, cpsr		@ stf\n"		\
-"	bic	%0, %0, #64\n"					\
-"	msr	cpsr_c, %0"					\
-	: "=r" (temp)						\
-	:							\
-	: "memory", "cc");					\
-	})
+ #define local_fiq_enable()
+// #define local_fiq_enable()					\
+// 	({							\
+// 		unsigned long temp;				\
+// 	__asm__ __volatile__(					\
+// 	"mrs	%0, cpsr		@ stf\n"		\
+// "	bic	%0, %0, #64\n"					\
+// "	msr	cpsr_c, %0"					\
+// 	: "=r" (temp)						\
+// 	:							\
+// 	: "memory", "cc");					\
+// 	})
 
 /*
  * Disable FIQs
  */
-#define local_fiq_disable()					\
-	({							\
-		unsigned long temp;				\
-	__asm__ __volatile__(					\
-	"mrs	%0, cpsr		@ clf\n"		\
-"	orr	%0, %0, #64\n"					\
-"	msr	cpsr_c, %0"					\
-	: "=r" (temp)						\
-	:							\
-	: "memory", "cc");					\
-	})
+ #define local_fiq_disable()
+// #define local_fiq_disable()					\
+// 	({							\
+// 		unsigned long temp;				\
+// 	__asm__ __volatile__(					\
+// 	"mrs	%0, cpsr		@ clf\n"		\
+// "	orr	%0, %0, #64\n"					\
+// "	msr	cpsr_c, %0"					\
+// 	: "=r" (temp)						\
+// 	:							\
+// 	: "memory", "cc");					\
+// 	})
 
 #define local_abt_enable()	do { } while (0)
 #define local_abt_disable()	do { } while (0)

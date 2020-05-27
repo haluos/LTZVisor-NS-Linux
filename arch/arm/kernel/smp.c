@@ -61,11 +61,6 @@
  */
 struct secondary_data secondary_data;
 
-// #ifdef smp_processor_id
-// #undef smp_processor_id
-// #define smp_processor_id()		1
-// #endif
-
 /*
  * control for which core is the next to come out of the secondary
  * boot "holding pen"
@@ -420,7 +415,7 @@ asmlinkage void secondary_start_kernel(void)
 	complete(&cpu_running);
 
 	local_irq_enable();
-	local_fiq_enable();
+	// local_fiq_enable();
 	local_abt_enable();
 
 	/*
@@ -626,7 +621,7 @@ static void ipi_cpu_stop(void)
 
 	set_cpu_online(cpu, false);
 
-	local_fiq_disable();
+	// local_fiq_disable();
 	local_irq_disable();
 
 	while (1)

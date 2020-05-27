@@ -3911,14 +3911,17 @@ void lock_release(struct lockdep_map *lock, int nested,
 
 	if (unlikely(current->lockdep_recursion))
 		return;
-
+	pr_info("save irq flags...\n");
 	raw_local_irq_save(flags);
+	pr_info("check flags\n");
 	check_flags(flags);
 	current->lockdep_recursion = 1;
+	pr_info("trace lock...\n");
 	trace_lock_release(lock, ip);
 	if (__lock_release(lock, nested, ip))
 		check_chain_key(current);
 	current->lockdep_recursion = 0;
+	pr_info("irq restore... \n");
 	raw_local_irq_restore(flags);
 }
 EXPORT_SYMBOL_GPL(lock_release);

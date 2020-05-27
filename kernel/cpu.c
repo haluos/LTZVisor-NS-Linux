@@ -1143,7 +1143,7 @@ static int do_cpu_up(unsigned int cpu, enum cpuhp_state target)
 	}
 
 	err = _cpu_up(cpu, 0, target);
-	pr_info("CPU_up with exit status: 0x%x\n", err);
+	// pr_info("CPU_up with exit status: 0x%x\n", err);
 out:
 	cpu_maps_update_done();
 	return err;

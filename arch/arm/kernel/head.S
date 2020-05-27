@@ -744,18 +744,20 @@ ENTRY(secure_read)
 ENDPROC(secure_read)
 
 ENTRY(secure_write)
-	mov r3, r0
+	push {r0-r2,lr}
 	mov	r2, r0
 	ldr	r0, =-31 /* smc call id - write */
 	smc	#0
-	mov r0, r3
+	pop {r0-r2,lr}
 	bx	lr
 ENDPROC(secure_write)
 
 ENTRY(secure_cp15_write)
+	push {r0-r2,lr}
 	@ mov r5, r0
 	ldr	r0, =-32 /* smc call id - write */
 	smc	#0
 	@ mov r0, r5
+	pop {r0-r2,lr}
 	bx	lr
 ENDPROC(secure_cp15_write)

@@ -364,8 +364,9 @@ void cpu_startup_entry(enum cpuhp_state state)
 #endif
 	arch_cpu_idle_prepare();
 	cpuhp_online_idle(state);
-	while (1)
+	while (1){
 		do_idle();
+	}
 }
 
 /*

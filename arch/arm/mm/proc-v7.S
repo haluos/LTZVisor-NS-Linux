@@ -76,8 +76,21 @@ ENDPROC(cpu_v7_reset)
  *	IRQs are already disabled.
  */
 ENTRY(cpu_v7_do_idle)
+	.arch_extension sec
+	@ teq r3, #1
+	@ bne _trap_to_ltzvisor
+	@ .global ltzvisor_idle_handler
+	@ push {r0,r3}
+	@ push {r0-r12,lr}
+	@ mrc p15, 0, r0, c0, c0, 5
+	@ mov r2, #0x1
+	@ and r0, r2, r0
+	@ bl ltzvisor_idle_handler
+	@ pop {r0-r12,lr}
 	dsb					@ WFI may enter a low-power mode
 	wfi
+	@ ldr r0, =0x911
+	@ smc #0
 	ret	lr
 ENDPROC(cpu_v7_do_idle)
 

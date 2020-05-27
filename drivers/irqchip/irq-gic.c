@@ -452,7 +452,7 @@ static u8 gic_get_cpumask(struct gic_chip_data *gic)
 
 	for (i = mask = 0; i < 32; i += 4) {
 		mask = readl_relaxed(base + GIC_DIST_TARGET + i);
-		pr_info("GIC mask: 0x%x, 0x%x\n", mask, num_possible_cpus());
+		// pr_info("GIC mask: 0x%x, 0x%x\n", mask, num_possible_cpus());
 		mask |= mask >> 16;
 		mask |= mask >> 8;
 		if (mask)

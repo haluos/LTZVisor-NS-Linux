@@ -579,7 +579,7 @@ void __init smp_init(void)
 		}
 		if (!cpu_online(cpu))
 		{
-			pr_info("CPU not online\n");
+			// pr_info("CPU not online\n");
 			cpu_up(cpu);
 		}
 	}
