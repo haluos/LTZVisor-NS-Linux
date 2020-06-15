@@ -2639,3 +2639,11 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 	return 0;
 }
 #endif /* CONFIG_COMPAT */
+
+// SYSCALL_DEFINE0(sendm_to_secure)
+// {
+// 	asm volatile(".arch_extension sec\n"
+// 								"ldr r0, =0x9\n"
+// 								"smc #0\n");
+// 	return 0;
+// }

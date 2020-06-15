@@ -37,3 +37,12 @@ asmlinkage long sys_arm_fadvise64_64(int fd, int advice,
 {
 	return ksys_fadvise64_64(fd, offset, len, advice);
 }
+
+asmlinkage long sys_sendm_to_secure(void)
+{
+	// pr_info("Syscall secure send\n");
+	asm volatile(".arch_extension sec\n"
+								"ldr r0, =0x9\n"
+								"smc #0\n");
+	return 0;
+}
